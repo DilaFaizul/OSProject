@@ -1,11 +1,11 @@
 # OSProject Running Containers for Application Development
 
-Group Name: __Fill your team name__. 
+Group Name: __OSOS__. 
 
-Section: __Fill your class section__. 
+Section: __2__. 
 
 Team Mates:
-1. __Fill name__ and __matric no__
+1. __AHMAD ADLAN BIN ABDUL HALIM 2215775__
 2. __Fill name__ and __matric no__
 3. __Fill name__ and __matric no__
 
