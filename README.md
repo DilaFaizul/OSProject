@@ -205,9 +205,17 @@ docker run --detach -v /workspaces/OSProject/webpage:/usr/local/apache2/htdocs/ 
 
 ***Questions:***
 
-1. What is the permission of folder /usr/local/apache/htdocs and what user and group owns the folder? . ***(2 mark)*** __Fill answer here__.
-2. What port is the apache web server running. ***(1 mark)*** __Fill answer here__.
-3. What port is open for http protocol on the host machine? ***(1 mark)*** __Fill answer here__.
+1. What is the permission of folder /usr/local/apache/htdocs and what user and group owns the folder? . ***(2 mark)*** 
+<img src="./images/dockerps.png" width="70%">
+<img src="./images/usergroup.png" width="70%">
+__User: 1000__ 
+__Group: 1000__
+
+2. What port is the apache web server running. ***(1 mark)*** 
+__80__
+3. What port is open for http protocol on the host machine? ***(1 mark)*** 
+__8080__
+<img src="./images/helloworld.png" width="70%">
 
 ## Create SUB Networks
 
@@ -226,11 +234,20 @@ docker run -itd --net rednet --name c2 busybox sh
 ```
 ***Questions:***
 
-1. Describe what is busybox and what is command switch **--name** is for? . ***(2 mark)*** __Fill answer here__.
-2. Explore the network using the command ```docker network ls```, show the output of your terminal. ***(1 mark)*** __Fill answer here__.
-3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** __Fill answer here__.
-4. What is the network address for the running container c1 and c2? ***(1 mark)*** __Fill answer here__.
-5. Using the command ```docker exec c1 ping c2```, which basically tries to do a ping from container c1 to c2. Are you able to ping? Show your output . ***(1 mark)*** __Fill answer here__.
+1. Describe what is busybox and what is command switch **--name** is for? . ***(2 mark)*** 
+__BusyBox is a set of Unix utilities which can be installed as standalone executable or added to existing software that includes it as a component. It includes many mainstream UNIX utilities in a small multiple purposes, functional and efficient piece of software making it perfect to use with embedded systems.__
+__The --name flag in Docker is used to assign a specific name to a container. Instead of having a randomly generated name, this flag allows to specify a human-readable and memorable name for easy reference.__
+2. Explore the network using the command ```docker network ls```, show the output of your terminal. ***(1 mark)*** 
+<img src="./images/dockerNetwork.png" width="70%">
+3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** 
+__bluenet: 172.19.0.1__
+__rednet: 172.20.0.1__
+4. What is the network address for the running container c1 and c2? ***(1 mark)*** 
+__bluenet: 172.19.0.2__
+__rednet: 172.20.0.2__
+5. Using the command ```docker exec c1 ping c2```, which basically tries to do a ping from container c1 to c2. Are you able to ping? Show your output . ***(1 mark)*** 
+__No__
+<img src="./images/c1Pingc2.png" width="70%">
 
 ## Bridging two SUB Networks
 1. Let's try this again by creating a network to bridge the two containers in the two subnetworks
@@ -242,8 +259,11 @@ docker exec c1 ping c2
 ```
 ***Questions:***
 
-1. Are you able to ping? Show your output . ***(1 mark)*** __Fill answer here__.
-2. What is different from the previous ping in the section above? ***(1 mark)*** __Fill answer here__.
+1. Are you able to ping? Show your output . ***(1 mark)*** 
+__Yes the ping is successful.__
+<img src="./images/pingoutput.png" width="70%">
+2. What is different from the previous ping in the section above? ***(1 mark)*** 
+__The previous ping failed with the error message ping: bad address 'c2' because c1 and c2 were on different networks (bluenet and rednet), and thus couldn't directly communicate. The current ping is successful because both c1 and c2 are now connected to a common network, bridgenet, which allows them to communicate with each other. The bridge network facilitates communication between containers that belong to different networks.__
 
 ## Intermediate Level (10 marks bonus)
 
@@ -386,8 +406,29 @@ You have now set up a Node.js application in a Docker container on nodejsnet net
 
 ***Questions:***
 
-1. What is the output of step 5 above, explain the error? ***(1 mark)*** __Fill answer here__.
-2. Show the instruction needed to make this work. ***(1 mark)*** __Fill answer here__.
+1. What is the output of step 5 above, explain the error? ***(1 mark)***
+<img src="./images/error.png" width="70%"> 
+__This error occurs because the Node.js container is unable to connect to the MySQL container due to them being on separate Docker networks (mysqlnet and nodejsnet). Since they are not bridged together or interconnected via a shared network, the Node.js application running on nodejsnet cannot reach the MySQL database running on mysqlnet.__
+2. Show the instruction needed to make this work. ***(1 mark)*** 
+__1.Create a new network called bridgenet:__
+```sh
+docker network create bridgenet
+```
+__2.Connect both containers (mysql-container and nodejs-container) to the bridgenet network:__
+```sh
+docker network connect bridgenet mysql-container
+docker network connect bridgenet nodejs-container
+```
+__3.Verify that both containers are connected to the bridgenet network:__
+```sh
+docker network inspect bridgenet
+```
+__4.Verify that both containers are connected to the bridgenet network:__
+```sh
+docker restart nodejs-container
+```
+
+__By bridging the mysqlnet and nodejsnet networks with bridgenet, you enable communication between the MySQL database container (mysql-container) and the Node.js application container (nodejs-container). This allows the Node.js application to successfully connect to and query the MySQL database, resolving the Connection refused error.__
 
 
 
