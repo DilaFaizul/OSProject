@@ -6,7 +6,7 @@ Section: __2__.
 
 Team Mates:
 1. __AHMAD ADLAN BIN ABDUL HALIM 2215775__
-2. __Fill name__ and __matric no__
+2. __NUR ADILA BINTI AHMAD FAIZUL__ and __2211868__
 3. __Fill name__ and __matric no__
 
 ## Rules
